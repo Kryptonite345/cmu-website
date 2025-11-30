@@ -1,0 +1,107 @@
+<?php
+// setup_database.php - Database setup script
+
+$host = 'localhost';
+$username = 'root';
+$password = 'dave090935715919*';
+
+try {
+    // Connect without selecting a database
+    $pdo = new PDO("mysql:host=$host", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Create database
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS cmu_management");
+    $pdo->exec("USE cmu_management");
+    
+    echo "<h3>Database 'cmu_management' created successfully!</h3>";
+    
+    // Create users table
+    $pdo->exec("CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        user_type ENUM('admin', 'super_admin') NOT NULL,
+        full_name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) NOT NULL,
+        status ENUM('active', 'inactive') DEFAULT 'active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )");
+    echo "Users table created successfully!<br>";
+    
+    // Create enrollments table
+    $pdo->exec("CREATE TABLE IF NOT EXISTS enrollments (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        given_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        program_applied VARCHAR(100) NOT NULL,
+        status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )");
+    echo "Enrollments table created successfully!<br>";
+    
+    // Create courses table
+    $pdo->exec("CREATE TABLE IF NOT EXISTS courses (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        category VARCHAR(100),
+        duration INT,
+        price DECIMAL(10,2),
+        status ENUM('active', 'inactive') DEFAULT 'active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )");
+    echo "Courses table created successfully!<br>";
+    
+    // Create news table
+    $pdo->exec("CREATE TABLE IF NOT EXISTS news (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        content TEXT NOT NULL,
+        category VARCHAR(100),
+        status ENUM('published', 'draft') DEFAULT 'published',
+        created_by INT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )");
+    echo "News table created successfully!<br>";
+    
+    // Create contact_messages table
+    $pdo->exec("CREATE TABLE IF NOT EXISTS contact_messages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) NOT NULL,
+        subject VARCHAR(255) NOT NULL,
+        message TEXT NOT NULL,
+        status ENUM('read', 'unread') DEFAULT 'unread',
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )");
+    echo "Contact messages table created successfully!<br>";
+    
+    // Insert default super admin
+    $hashed_password = password_hash('admin123', PASSWORD_DEFAULT);
+    $pdo->exec("INSERT IGNORE INTO users (username, password, user_type, full_name, email) 
+                VALUES ('superadmin', '$hashed_password', 'super_admin', 'Super Administrator', 'superadmin@cmu.edu.ph')");
+    
+    // Insert default admin
+    $pdo->exec("INSERT IGNORE INTO users (username, password, user_type, full_name, email) 
+                VALUES ('admin', '$hashed_password', 'admin', 'Administrator', 'admin@cmu.edu.ph')");
+    echo "Default users created successfully!<br>";
+    
+    // Insert sample courses
+    $pdo->exec("INSERT IGNORE INTO courses (title, description, category, duration, price) VALUES
+                ('Computer Science', 'Bachelor of Science in Computer Science', 'Technology', 48, 0),
+                ('Business Administration', 'Bachelor of Science in Business Administration', 'Business', 48, 0),
+                ('Education', 'Bachelor of Elementary Education', 'Education', 48, 0),
+                ('Engineering', 'Bachelor of Science in Civil Engineering', 'Engineering', 60, 0)");
+    echo "Sample courses created successfully!<br>";
+    
+    echo "<h3>Database setup completed successfully!</h3>";
+    echo "<p><strong>Default login credentials:</strong></p>";
+    echo "<p>Super Admin - Username: <strong>superadmin</strong>, Password: <strong>admin123</strong></p>";
+    echo "<p>Admin - Username: <strong>admin</strong>, Password: <strong>admin123</strong></p>";
+    echo "<p><a href='http://localhost/cmu-website/Login.php' style='background: #4361ee; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Go to Login</a></p>";
+    
+} catch(PDOException $e) {
+    die("Database setup failed: " . $e->getMessage());
+}
+?>

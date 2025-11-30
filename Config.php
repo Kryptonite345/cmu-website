@@ -1,0 +1,13 @@
+<?php
+$host = 'localhost';
+$dbname = 'cmu_management';
+$username = 'root';
+$password = 'dave090935715919*';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>

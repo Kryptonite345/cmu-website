@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CMU Program Offerings</title>
+    <link rel="stylesheet" href="Courses.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <?php
+require_once 'config.php';
+
+// Fetch active courses from database
+$stmt = $pdo->query("SELECT * FROM courses WHERE status = 'active' ORDER BY created_at DESC");
+$courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Default college programs (for the fixed sections) - UPDATED WITH DETAILED PROGRAMS
+$default_colleges = [
+    'CCS' => [
+        'name' => 'College of Computer Studies',
+        'logo' => 'CCS_logo.png',
+        'programs' => [
+            'Bachelor of Science in Information Technology (BSIT)'
+        ],
+        'description' => 'The Information Technology (IT) course at City of Malabon University (CMU) is designed to equip students with the knowledge, skills, and competencies required to excel in the dynamic field of technology. This program provides a comprehensive foundation in computer systems, software development, networking, data management, and emerging technologies, fostering problem-solving and critical thinking skills.',
+        'images' => ['CSS_1.png', 'CSS_2.png', 'CSS_3.png', 'CSS_4.png', 'CSS_5.png', 'CSS_6.png']
+    ],
+    'CCJE' => [
+        'name' => 'College of Criminal Justice Education',
+        'logo' => 'CCJE_logo.png',
+        'programs' => [
+            'Bachelor of Science in Criminology'
+        ],
+        'description' => 'The Criminology program at City of Malabon University (CMU) is designed to prepare students for careers in law enforcement, criminal justice, and public safety. This course provides comprehensive training in crime prevention, law enforcement administration, forensic science, criminal behavior analysis, and community safety, fostering analytical thinking and ethical decision-making skills.',
+        'images' => ['CRIM_1.png', 'CRIM_2.png', 'CRIM_3.png', 'CRIM_4.png', 'CRIM_5.png', 'CRIM_6.png']
+    ],
+    'CTE' => [
+        'name' => 'College of Teacher Education',
+        'logo' => 'CTE_logo.png',
+        'programs' => [
+            'Bachelor in Elementary Education (BEED)',
+            'Bachelor in Secondary Education (BSE)',
+            'Bachelor of Early Childhood Education (BECED)'
+        ],
+        'bse_details' => [
+            'English',
+            'Mathematics', 
+            'Social Studies'
+        ],
+        'description' => 'The Teacher Education programs at City of Malabon University (CMU) aim to develop future educators with a passion for teaching and a commitment to lifelong learning. These programs offer a strong foundation in pedagogy, curriculum development, classroom management, and specialized training in elementary, secondary, and early childhood education, equipping students to inspire and educate the next generation effectively.',
+        'images' => ['CTE_1.png', 'CTE_2.png', 'CTE_3.png', 'CTE_4.png', 'CTE_5.png', 'CTE_6.png']
+    ],
+    'CBA' => [
+        'name' => 'College of Business and Accountancy',
+        'logo' => 'CBA_logo.png',
+        'programs' => [
+            'Bachelor of Science in Business Administration (BSBA) major in:',
+            'Bachelor of Science in Accountancy',
+            'Bachelor of Science in Management Accountancy (BSMA)'
+        ],
+        'bsba_details' => [
+            'Financial Management',
+            'Human Resource Management',
+            'Marketing Management'
+        ],
+        'description' => 'The Business and Accountancy programs at City of Malabon University (CMU) are crafted to nurture innovative leaders and skilled professionals in the fields of business and finance. These programs provide an in-depth understanding of financial management, marketing strategies, human resource development, and accounting principles, fostering entrepreneurial mindsets and strategic thinking for real-world business challenges.',
+        'images' => ['CBA_1.png', 'CBA_2.png', 'CBA_3.png', 'CBA_4.png', 'CBA_5.png', 'CBA_6.png']
+    ],
+    'CAS' => [
+        'name' => 'College of Arts and Sciences',
+        'logo' => 'CAS_logo.png',
+        'programs' => [
+            'Bachelor of Arts in Journalism',
+            'Bachelor of Arts in Political Science',
+            'Bachelor of Public Administration',
+            'Bachelor of Science in Social Work'
+        ],
+        'description' => 'The Arts and Sciences programs at City of Malabon University (CMU) focus on cultivating critical thinkers, effective communicators, and compassionate leaders. These courses provide a robust foundation in journalism, political science, public administration, and social work, fostering analytical skills, civic responsibility, and a commitment to community service and social justice.',
+        'images' => ['CAS_1.png', 'CAS_2.png', 'CAS_3.png', 'CAS_4.png', 'CAS_5.png', 'CAS_6.png']
+    ],
+    'COA' => [
+        'name' => 'College of Accountancy',
+        'logo' => 'COA_logo.png',
+        'programs' => [
+            'Bachelor of Science in Accountancy',
+            'Bachelor of Science in Management Accounting'
+        ],
+        'description' => 'The College of Accountancy (COA) at City of Malabon University (CMU) is dedicated to developing competent, ethical, and globally competitive accounting professionals. The program provides comprehensive training in financial accounting, auditing, taxation, and management accounting, equipping students with the analytical, technical, and decision-making skills necessary for careers in accounting, finance, and business management. It also emphasizes professional integrity, critical thinking, and a strong foundation in ethical and legal standards in the accounting profession.',
+        'images' => ['COA_1.png', 'COA_2.png', 'COA_3.png', 'COA_4.png', 'COA_5.png', 'COA_6.png']
+    ]
+];
+?>
+</head>
+<body data-page="courses">
+    <div class="header">
+        <div class="logo">
+            <img src="images/cmu logo.png" alt="City of Malabon University Logo">
+            <div class="logo-text">
+                <h4>CITY OF MALABON UNIVERSITY</h4>
+                <h5>Pampano St, Maya-Maya St, Malabon, Metro Manila</h5>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <a href="Home.html" target="_self" class="nav-item">
+                <img src="images/home logo.png" alt="Home Icon">
+                <span>HOME</span>
+            </a>
+            <a href="Admission.html" target="_self" class="nav-item">
+                <img src="images/admission logo.png" alt="Admission Icon">
+                <span>ADMISSION</span>
+            </a>
+            <a href="Courses.php" target="_self" class="nav-item">
+                <img src="images/courses logo.png" alt="Courses Icon">
+                <span>COURSES</span>
+            </a>
+            <a href="News.php" target="_self" class="nav-item">
+                <img src="images/news logo.png" alt="News Icon">
+                <span>NEWS</span>
+            </a>
+            <a href="Contact Us.php" target="_self" class="nav-item">
+                <img src="images/mail logo.png" alt="Contact Us Icon">
+                <span>CONTACT US</span>
+            </a>
+            <!-- Admin Portal Link -->
+            <a href="Login.html" target="_self" class="admin-portal-link">
+                <svg class="admin-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 5.5V7H9V5.5L3 7V9L9 10.5V12H15V10.5L21 9ZM12 15C7.6 15 4 16.8 4 19V21H20V19C20 16.8 16.4 15 12 15Z" fill="currentColor"/>
+                </svg>
+                <div class="tooltip">Admin Portal</div>
+            </a>
+        </div>
+    </div>
+
+    <section class="heading">
+        <h1>COURSES</h1>
+    </section>
+
+    <!-- Display Default College Programs -->
+<?php foreach($default_colleges as $code => $college): ?>
+    <div class="program-section">
+        <img src="<?php echo $college['logo']; ?>" alt="<?php echo $code; ?> Logo">
+        <div class="program-details">
+            <h2><?php echo $code; ?></h2>
+            <h4><?php echo $college['name']; ?></h4>
+            <ul>
+                <?php foreach($college['programs'] as $program): ?>
+                    <li>
+                        <?php if($program == 'Bachelor in Secondary Education (BSE)' && isset($college['bse_details'])): ?>
+                            <?php echo $program; ?>
+                            <ol type="a">
+                                <?php foreach($college['bse_details'] as $detail): ?>
+                                    <li><?php echo $detail; ?></li>
+                                <?php endforeach; ?>
+                            </ol>
+                        <?php elseif($program == 'Bachelor of Science in Business Administration (BSBA) major in:' && isset($college['bsba_details'])): ?>
+                            <?php echo $program; ?>
+                            <ol type="i">
+                                <?php foreach($college['bsba_details'] as $detail): ?>
+                                    <li><?php echo $detail; ?></li>
+                                <?php endforeach; ?>
+                            </ol>
+                        <?php else: ?>
+                            <?php echo $program; ?>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+    
+    <section class="flex-container">
+        <div class="images-section">
+            <div class="big-image">
+                <img src="images/<?php echo $college['images'][0]; ?>" alt="<?php echo $code; ?> Big Image">
+            </div>
+            <div class="small-images">
+                <?php for($i = 1; $i < 6; $i++): ?>
+                    <img src="images/<?php echo $college['images'][$i]; ?>" alt="<?php echo $code; ?> Small Image <?php echo $i; ?>">
+                <?php endfor; ?>
+            </div>
+        </div>
+        <div class="Description">
+            <h3>Description</h3>
+            <p><?php echo $college['description']; ?></p>
+            <a href="Enrollment.php"><button>Enroll now</button></a>
+        </div>
+    </section>
+    
+    <?php if($code !== 'COA'): ?>
+        <hr>
+    <?php endif; ?>
+<?php endforeach; ?>
+
+    <!-- Display Dynamic Courses from Database -->
+    <?php if (!empty($courses)): ?>
+        <hr style="border: 2px solid #007bff; margin: 60px 0;">
+        <div style="text-align: center; margin: 40px 0;">
+            <h2 style="color: white; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">New Course Offerings</h2>
+        </div>
+        
+        <?php foreach($courses as $index => $course): ?>
+            <div class="program-section">
+                <img src="images/course_default.png" alt="Course Icon" style="background: #007bff; padding: 10px;">
+                <div class="program-details">
+                    <h2 style="color: #ff9354;">NEW</h2>
+                    <h4><?php echo htmlspecialchars($course['title']); ?></h4>
+                    <ul>
+                        <li>Category: <?php echo htmlspecialchars($course['category']); ?></li>
+                        <?php if($course['duration']): ?>
+                            <li>Duration: <?php echo htmlspecialchars($course['duration']); ?></li>
+                        <?php endif; ?>
+                        <?php if($course['price']): ?>
+                            <li>Price: $<?php echo number_format($course['price'], 2); ?></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+            
+            <section class="flex-container">
+                <div class="images-section">
+                    <div class="big-image">
+                        <img src="images/course_placeholder.png" alt="Course Image">
+                    </div>
+                    <div class="small-images">
+                        <?php for($i = 1; $i <= 5; $i++): ?>
+                            <img src="images/course_thumb.png" alt="Course Thumbnail <?php echo $i; ?>">
+                        <?php endfor; ?>
+                    </div>
+                </div>
+                <div class="Description">
+                    <h3>Description</h3>
+                    <p><?php echo nl2br(htmlspecialchars($course['description'])); ?></p>
+                    <?php if($course['enrollments_count'] > 0): ?>
+                        <p><strong>Already enrolled: <?php echo $course['enrollments_count']; ?> students</strong></p>
+                    <?php endif; ?>
+                    <a href="Enrollment.php"><button>Enroll now</button></a>
+                </div>
+            </section>
+            
+            <?php if($index < count($courses) - 1): ?>
+                <hr>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About CMU</h3>
+                <ul>
+                    <li><a href="#">Facts & History</a></li>
+                    <li><a href="#">Vision and Mission</a></li>
+                    <li><a href="#">Transparency Seal</a></li>
+                    <li><a href="#">Careers @ CMU</a></li>
+                </ul>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Student Life</h3>
+                <ul>
+                    <li><a href="#">Programs Offerings</a></li>
+                    <li><a href="#">Sports Program</a></li>
+                    <li><a href="#">Become a CMU Student</a></li>
+                    <li><a href="#">Downloadable Forms</a></li>
+                </ul>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+                    <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#"><i class="fab fa-twitter"></i> Twitter</a>
+                </div>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> <a href="mailto:email@cmu.edu.ph">Email Us</a></li>
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <address>
+                            Pampano cor.,<br>
+                            Maya-Maya Sts., Longos<br>
+                            City of Malabon
+                        </address>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <img src="images/CMU_white logo.png" alt="CMU Logo" class="footer-logo">
+            <p class="copyright-text">Copyright © 2024 City of Malabon University. All Rights Reserved</p>
+        </div>
+    </footer>
+    
+    <div class="preloader" id="preloader">
+        <img src="images/cmu logo.png" alt="Loading Logo" id="preloader-logo">
+        <div class="counter" id="preloader-counter">0%</div>
+    </div>
+
+    <script>
+        const currentPage = document.body.getAttribute('data-page');
+        const navItems = document.querySelectorAll('.nav-bar .nav-item');
+    
+        navItems.forEach(navItem => {
+            const href = navItem.getAttribute('href').toLowerCase().replace('.php', '').replace('.html', '');
+            if (currentPage === href) {
+                navItem.classList.add('active'); 
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const preloader = document.getElementById('preloader');
+            const counter = document.getElementById('preloader-counter');
+            const logo = document.getElementById('preloader-logo');
+            const links = document.querySelectorAll('a');
+
+            links.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    const target = this.getAttribute('target') || '_self'; 
+
+                    if (this.getAttribute('href') && this.getAttribute('href') !== '#' && !this.getAttribute('href').includes('mailto:')) {
+                        e.preventDefault(); 
+
+                        preloader.classList.add('show'); 
+
+                        let count = 0;
+                        const interval = setInterval(() => {
+                            count += 1;
+                            counter.textContent = `${count}%`;
+
+                            logo.style.opacity = count / 100;
+                            if (count > 80) {
+                                logo.style.filter = `grayscale(${100 - count}%)`;
+                            }
+
+                            if (count >= 100) {
+                                clearInterval(interval);
+                                preloader.classList.remove('show');
+
+                                if (target === '_blank') {
+                                    window.open(this.href, '_blank'); 
+                                } else {
+                                    window.location.href = this.href; 
+                                }
+                            }
+                        }, 20); 
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
